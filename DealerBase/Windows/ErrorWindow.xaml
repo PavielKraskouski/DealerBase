@@ -1,0 +1,15 @@
+﻿<Window x:Class="DealerBase.Windows.ErrorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ошибка" SizeToContent="Height" Width="350" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}">
+    <Border Margin="10" Background="#404040" BorderBrush="#000000" BorderThickness="1">
+        <StackPanel Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <Path Stretch="Uniform" Fill="White" Width="40" Height="40" Data="M 264.845 45.441 C 235.542 16.139 196.582 0 155.143 0 S 74.743 16.139 45.44 45.441 C 16.138 74.743 0 113.703 0 155.143 c 0 41.439 16.138 80.399 45.44 109.701 c 29.303 29.303 68.262 45.44 109.702 45.44 s 80.399 -16.138 109.702 -45.44 c 29.302 -29.302 45.44 -68.262 45.44 -109.701 C 310.285 113.703 294.147 74.743 264.845 45.441 z M 189.702 157.985 l 38.669 38.669 c 3.12 3.119 3.12 8.194 0 11.313 l -22.333 22.333 c -1.507 1.507 -3.516 2.337 -5.657 2.337 c -2.141 0 -4.15 -0.83 -5.657 -2.337 l -38.669 -38.669 c -0.748 -0.746 -2.08 -0.746 -2.829 0 l -38.669 38.669 c -1.507 1.507 -3.516 2.337 -5.657 2.337 c -2.141 0 -4.149 -0.83 -5.657 -2.336 l -22.333 -22.334 c -1.507 -1.507 -2.337 -3.516 -2.337 -5.656 c 0 -2.142 0.83 -4.15 2.337 -5.657 l 38.669 -38.669 c 0.766 -0.767 0.766 -2.063 -0.001 -2.829 l -40.302 -40.302 c -1.507 -1.507 -2.337 -3.516 -2.337 -5.657 c 0 -2.141 0.83 -4.149 2.337 -5.656 l 22.333 -22.333 c 1.507 -1.507 3.516 -2.337 5.657 -2.337 c 2.141 0 4.149 0.83 5.656 2.337 l 40.303 40.303 c 0.749 0.747 2.081 0.746 2.828 0 l 40.303 -40.303 c 1.507 -1.507 3.516 -2.337 5.657 -2.337 c 2.141 0 4.149 0.83 5.656 2.337 l 22.333 22.333 c 1.507 1.507 2.337 3.516 2.337 5.656 c 0 2.142 -0.83 4.15 -2.337 5.658 l -40.302 40.301 C 188.936 155.923 188.936 157.219 189.702 157.985 z"/>
+                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Ошибка доступа к данным!"/>
+            </StackPanel>
+            <Button Margin="0,20,0,0" Width="130" Height="40" IsDefault="True" Content="OK" Click="Accept_Click"/>
+        </StackPanel>
+    </Border>
+</Window>
