@@ -25,15 +25,26 @@ namespace DealerBase
 
     public static class DBAccess
     {
+        private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string DBPath = Path.Combine(BaseDirectory, "DealerBase.db");
+        private static readonly string DBBackupPath = Path.Combine(BaseDirectory, "DealerBase_Backup.db");
+        private static readonly string SQLPath = Path.Combine(BaseDirectory, "DealerBase.sql");
+        private static readonly string DBConnectionString = String.Format("Data Source = {0}", DBPath);
+
         public static void CreateDatabase()
         {
-            SQLiteConnection.CreateFile("DealerBase.db");
-            ExecuteNonQuery(File.ReadAllText("DealerBase.sql"));
+            SQLiteConnection.CreateFile(DBPath);
+            ExecuteNonQuery(File.ReadAllText(SQLPath));
+        }
+
+        public static void BackupDatabase()
+        {
+            BackupDatabase(DBBackupPath);
         }
 
         public static void BackupDatabase(string fileName)
         {
-            using (SQLiteConnection source = new SQLiteConnection("Data Source = DealerBase.db"))
+            using (SQLiteConnection source = new SQLiteConnection(DBConnectionString))
             using (SQLiteConnection destination = new SQLiteConnection(String.Format("Data Source = {0}", fileName)))
             {
                 source.Open();
@@ -44,7 +55,7 @@ namespace DealerBase
 
         private static void Execute(Action<SQLiteCommand> action, string commandText, params object[] parameters)
         {
-            using (SQLiteConnection connection = new SQLiteConnection("Data Source = DealerBase.db"))
+            using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
             using (SQLiteCommand command = new SQLiteCommand(commandText, connection))
             using (SQLiteCommand pragmaCommand = new SQLiteCommand("PRAGMA foreign_keys = 1", connection))
             {

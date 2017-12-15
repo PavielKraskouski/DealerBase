@@ -59,7 +59,7 @@ namespace DealerBase.Windows
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            DBAccess.BackupDatabase("DealerBase_Backup.db");
+            DBAccess.BackupDatabase();
         }
 
         private void ComboBox_DropDownClosed(object sender, EventArgs e)
