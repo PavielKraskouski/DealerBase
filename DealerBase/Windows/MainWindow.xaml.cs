@@ -21,9 +21,9 @@ namespace DealerBase.Windows
             long selectedRegionId = (long)(Region.SelectedItem as TextBlock).Tag;
             long selectedActivityId = (long)(Activity.SelectedItem as TextBlock).Tag;
             long selectedActivityDirectionId = (long)(ActivityDirection.SelectedItem as TextBlock).Tag;
-            Func<bool> regionExists = () => selectedRegionId == 0 || Entities.Region.Exists(selectedRegionId);
-            Func<bool> activityExists = () => selectedActivityId == 0 || Entities.Activity.Exists(selectedActivityId);
-            Func<bool> activityDirectionExists = () => selectedActivityDirectionId == 0 || Entities.ActivityDirection.Exists(selectedActivityDirectionId);
+            bool regionExists() => selectedRegionId == 0 || Entities.Region.Exists(selectedRegionId);
+            bool activityExists() => selectedActivityId == 0 || Entities.Activity.Exists(selectedActivityId);
+            bool activityDirectionExists() => selectedActivityDirectionId == 0 || Entities.ActivityDirection.Exists(selectedActivityDirectionId);
             Region.Items.RemoveRange(1, Region.Items.Count - 1);
             Entities.Region.Select().ForEach(x => Region.Items.Add(Entities.Region.ToTextBlock(x)));
             Region.SelectedIndex = regionExists() ? Region.Items.IndexOf(Region.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedRegionId)) : 0;
