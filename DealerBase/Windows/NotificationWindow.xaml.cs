@@ -51,9 +51,11 @@ namespace DealerBase.Windows
         {
             if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
             {
-                EventWindow eventWindow = new EventWindow();
-                eventWindow.Owner = this;
-                eventWindow.Event = Event.FromDataRow(Event.SelectOne((long)(Events.SelectedItem as TextBlock).Tag));
+                EventWindow eventWindow = new EventWindow()
+                {
+                    Owner = this,
+                    Event = Event.FromDataRow(Event.SelectOne((long)(Events.SelectedItem as TextBlock).Tag))
+                };
                 if ((bool)eventWindow.ShowDialog())
                 {
                     if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
@@ -66,16 +68,20 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow();
-                        errorWindow.Owner = this;
+                        ErrorWindow errorWindow = new ErrorWindow()
+                        {
+                            Owner = this
+                        };
                         errorWindow.ShowDialog();
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Owner = this;
+                ErrorWindow errorWindow = new ErrorWindow()
+                {
+                    Owner = this
+                };
                 errorWindow.ShowDialog();
             }
         }
@@ -94,8 +100,10 @@ namespace DealerBase.Windows
         {
             if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
             {
-                ConfirmationWindow confirmationWindow = new ConfirmationWindow();
-                confirmationWindow.Owner = this;
+                ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+                {
+                    Owner = this
+                };
                 if ((bool)confirmationWindow.ShowDialog())
                 {
                     if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
@@ -108,16 +116,20 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow();
-                        errorWindow.Owner = this;
+                        ErrorWindow errorWindow = new ErrorWindow()
+                        {
+                            Owner = this
+                        };
                         errorWindow.ShowDialog();
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Owner = this;
+                ErrorWindow errorWindow = new ErrorWindow()
+                {
+                    Owner = this
+                };
                 errorWindow.ShowDialog();
             }
         }

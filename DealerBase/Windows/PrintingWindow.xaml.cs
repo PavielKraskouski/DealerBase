@@ -32,7 +32,7 @@ namespace DealerBase.Windows
             {
                 Dealer dealer = Dealer.FromDataRow(x);
                 Contact contact = dealer.Contacts.FirstOrDefault();
-                Phone phone = contact == null ? null : contact.Phones.FirstOrDefault();
+                Phone phone = contact?.Phones.FirstOrDefault();
                 TableCell nameCell = new TableCell(new Paragraph(new Run(String.Format("{0} \"{1}\"", BusinessEntity.Select(dealer.BusinessEntityId).Field<string>("Name"), dealer.Name)))) { Style = tableCellStyle };
                 TableCell regionCell = new TableCell(new Paragraph(new Run(Region.Select(dealer.RegionId).Field<string>("Name")))) { Style = tableCellStyle };
                 TableCell activityCell = new TableCell(new Paragraph(new Run(Activity.Select(dealer.ActivityId).Field<string>("Name")))) { Style = tableCellStyle };
@@ -94,16 +94,20 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow();
-                        errorWindow.Owner = this;
+                        ErrorWindow errorWindow = new ErrorWindow()
+                        {
+                            Owner = this
+                        };
                         errorWindow.ShowDialog();
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Owner = this;
+                ErrorWindow errorWindow = new ErrorWindow()
+                {
+                    Owner = this
+                };
                 errorWindow.ShowDialog();
             }
         }

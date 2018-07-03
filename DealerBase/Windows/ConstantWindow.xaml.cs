@@ -61,6 +61,6 @@ namespace DealerBase.Windows
             Value = TextBox.Text;
             DialogResult = true;
             SystemCommands.CloseWindow(this);
-        } 
+        }
     }
 }

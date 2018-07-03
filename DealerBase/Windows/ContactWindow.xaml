@@ -1,7 +1,6 @@
 ﻿<Window x:Class="DealerBase.Windows.ContactWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:system="clr-namespace:System;assembly=mscorlib"
         Title="Управление контактами" SizeToContent="Height" Width="600" ResizeMode="NoResize"
         Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}">
     <Window.Resources>

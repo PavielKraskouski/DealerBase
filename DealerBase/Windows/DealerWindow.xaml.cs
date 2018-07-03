@@ -1,11 +1,9 @@
 ﻿using DealerBase.Entities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -109,12 +107,14 @@ namespace DealerBase.Windows
                     break;
 
             }
-        }  
+        }
 
         private void AddContact_Click(object sender, RoutedEventArgs e)
         {
-            ContactWindow contactWindow = new ContactWindow();
-            contactWindow.Owner = this;
+            ContactWindow contactWindow = new ContactWindow()
+            {
+                Owner = this
+            };
             if ((bool)contactWindow.ShowDialog())
             {
                 contactWindow.Contact.Id = Dealer.Contacts.Count != 0 ? Dealer.Contacts.Max(x => x.Id) + 1 : 1;
@@ -132,9 +132,11 @@ namespace DealerBase.Windows
 
         private void EditContact_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ContactWindow contactWindow = new ContactWindow();
-            contactWindow.Owner = this;
-            contactWindow.Contact = Dealer.Contacts.First(x => x.Id == (long)(Contacts.SelectedItem as TextBlock).Tag).Clone();
+            ContactWindow contactWindow = new ContactWindow()
+            {
+                Owner = this,
+                Contact = Dealer.Contacts.First(x => x.Id == (long)(Contacts.SelectedItem as TextBlock).Tag).Clone()
+            };
             if ((bool)contactWindow.ShowDialog())
             {
                 Dealer.Contacts[Dealer.Contacts.FindIndex(x => x.Id == contactWindow.Contact.Id)] = contactWindow.Contact;
@@ -156,8 +158,10 @@ namespace DealerBase.Windows
 
         private void DeleteContact_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConfirmationWindow confirmationWindow = new ConfirmationWindow();
-            confirmationWindow.Owner = this;
+            ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+            {
+                Owner = this
+            };
             if ((bool)confirmationWindow.ShowDialog())
             {
                 int selectedIndex = Contacts.SelectedIndex;
@@ -170,8 +174,10 @@ namespace DealerBase.Windows
 
         private void AddEvent_Click(object sender, RoutedEventArgs e)
         {
-            EventWindow eventWindow = new EventWindow();
-            eventWindow.Owner = this;
+            EventWindow eventWindow = new EventWindow()
+            {
+                Owner = this
+            };
             if ((bool)eventWindow.ShowDialog())
             {
                 eventWindow.Event.Id = Dealer.Events.Count != 0 ? Dealer.Events.Max(x => x.Id) + 1 : 1;
@@ -189,9 +195,11 @@ namespace DealerBase.Windows
 
         private void EditEvent_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            EventWindow eventWindow = new EventWindow();
-            eventWindow.Owner = this;
-            eventWindow.Event = Dealer.Events.First(x => x.Id == (long)(Events.SelectedItem as TextBlock).Tag).Clone();
+            EventWindow eventWindow = new EventWindow()
+            {
+                Owner = this,
+                Event = Dealer.Events.First(x => x.Id == (long)(Events.SelectedItem as TextBlock).Tag).Clone()
+            };
             if ((bool)eventWindow.ShowDialog())
             {
                 Dealer.Events[Dealer.Events.FindIndex(x => x.Id == eventWindow.Event.Id)] = eventWindow.Event;
@@ -213,8 +221,10 @@ namespace DealerBase.Windows
 
         private void DeleteEvent_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConfirmationWindow confirmationWindow = new ConfirmationWindow();
-            confirmationWindow.Owner = this;
+            ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+            {
+                Owner = this
+            };
             if ((bool)confirmationWindow.ShowDialog())
             {
                 int selectedIndex = Events.SelectedIndex;
@@ -253,6 +263,6 @@ namespace DealerBase.Windows
             Dealer.Conditions = Conditions.Text;
             DialogResult = true;
             SystemCommands.CloseWindow(this);
-        } 
+        }
     }
 }

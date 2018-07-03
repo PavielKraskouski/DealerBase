@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
-using System.Data;
 
 namespace DealerBase
 {

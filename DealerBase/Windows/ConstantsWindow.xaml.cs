@@ -77,8 +77,10 @@ namespace DealerBase.Windows
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            ConstantWindow constantWindow = new ConstantWindow();
-            constantWindow.Owner = this;
+            ConstantWindow constantWindow = new ConstantWindow()
+            {
+                Owner = this
+            };
             if ((bool)constantWindow.ShowDialog())
             {
                 long insertedValueId;
@@ -109,9 +111,11 @@ namespace DealerBase.Windows
         {
             if (ValueExists())
             {
-                ConstantWindow constantWindow = new ConstantWindow();
-                constantWindow.Owner = this;
-                constantWindow.Value = (Values.SelectedItem as TextBlock).Text;
+                ConstantWindow constantWindow = new ConstantWindow()
+                {
+                    Owner = this,
+                    Value = (Values.SelectedItem as TextBlock).Text
+                };
                 if ((bool)constantWindow.ShowDialog())
                 {
                     if (ValueExists())
@@ -135,16 +139,20 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow();
-                        errorWindow.Owner = this;
+                        ErrorWindow errorWindow = new ErrorWindow()
+                        {
+                            Owner = this
+                        };
                         errorWindow.ShowDialog();
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Owner = this;
+                ErrorWindow errorWindow = new ErrorWindow()
+                {
+                    Owner = this
+                };
                 errorWindow.ShowDialog();
             }
         }
@@ -152,7 +160,7 @@ namespace DealerBase.Windows
         private void Value_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Edit.Command.Execute(null);
-        }   
+        }
 
         private void Delete_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -163,8 +171,10 @@ namespace DealerBase.Windows
         {
             if (ValueExists())
             {
-                ConfirmationWindow confirmationWindow = new ConfirmationWindow();
-                confirmationWindow.Owner = this;
+                ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+                {
+                    Owner = this
+                };
                 if ((bool)confirmationWindow.ShowDialog())
                 {
                     if (ValueExists() && !DealerExists())
@@ -188,18 +198,22 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow();
-                        errorWindow.Owner = this;
+                        ErrorWindow errorWindow = new ErrorWindow()
+                        {
+                            Owner = this
+                        };
                         errorWindow.ShowDialog();
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Owner = this;
+                ErrorWindow errorWindow = new ErrorWindow()
+                {
+                    Owner = this
+                };
                 errorWindow.ShowDialog();
             }
-        }  
+        }
     }
 }

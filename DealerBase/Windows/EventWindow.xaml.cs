@@ -44,8 +44,7 @@ namespace DealerBase.Windows
 
         private void Accept_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            DateTime dateTime;
-            e.CanExecute = Header.Text != string.Empty && DateTime.TryParse(Date.Text, out dateTime);
+            e.CanExecute = Header.Text != string.Empty && DateTime.TryParse(Date.Text, out DateTime dateTime);
         }
 
         private void Accept_Executed(object sender, ExecutedRoutedEventArgs e)

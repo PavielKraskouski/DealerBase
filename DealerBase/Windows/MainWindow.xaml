@@ -188,7 +188,7 @@
                         </TextBlock.Tag>
                     </TextBlock>
                 </ComboBox>
-            </StackPanel> 
+            </StackPanel>
         </Border>
         <Border Grid.Row="2" Grid.Column="1" Margin="10,10,0,0" Background="#404040" BorderBrush="#000000" BorderThickness="1">
             <Grid Margin="10">

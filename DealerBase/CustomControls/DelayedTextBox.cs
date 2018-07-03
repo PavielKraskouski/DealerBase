@@ -13,8 +13,8 @@ namespace DealerBase.CustomControls
         public DelayedTextBox() : base()
         {
             Timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
-            Timer.Tick += new EventHandler((x, y) => 
-            { 
+            Timer.Tick += new EventHandler((x, y) =>
+            {
                 Timer.Stop();
                 MainWindow.Instance.Update();
                 CommandManager.InvalidateRequerySuggested();

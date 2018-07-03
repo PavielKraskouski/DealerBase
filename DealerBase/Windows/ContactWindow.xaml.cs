@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DealerBase.Entities;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using DealerBase.Entities;
 using System.Windows.Threading;
 
 namespace DealerBase.Windows
@@ -77,8 +77,10 @@ namespace DealerBase.Windows
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            NumberAddressWindow numberAddressWindow = new NumberAddressWindow();
-            numberAddressWindow.Owner = this;
+            NumberAddressWindow numberAddressWindow = new NumberAddressWindow()
+            {
+                Owner = this
+            };
             if ((bool)numberAddressWindow.ShowDialog())
             {
                 long insertedValueId;
@@ -122,9 +124,11 @@ namespace DealerBase.Windows
 
         private void Edit_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NumberAddressWindow numberAddressWindow = new NumberAddressWindow();
-            numberAddressWindow.Owner = this;
-            numberAddressWindow.Value = (Values.SelectedItem as TextBlock).Text;
+            NumberAddressWindow numberAddressWindow = new NumberAddressWindow()
+            {
+                Owner = this,
+                Value = (Values.SelectedItem as TextBlock).Text
+            };
             if ((bool)numberAddressWindow.ShowDialog())
             {
                 long selectedValueId = (long)(Values.SelectedItem as TextBlock).Tag;
@@ -158,8 +162,10 @@ namespace DealerBase.Windows
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConfirmationWindow confirmationWindow = new ConfirmationWindow();
-            confirmationWindow.Owner = this;
+            ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+            {
+                Owner = this
+            };
             if ((bool)confirmationWindow.ShowDialog())
             {
                 int selectedValueIndex = Values.SelectedIndex;

@@ -22,7 +22,7 @@ namespace DealerBase.Styles
             {
                 SystemCommands.MaximizeWindow(window);
             }
-            else if( window.WindowState == WindowState.Maximized)
+            else if (window.WindowState == WindowState.Maximized)
             {
                 SystemCommands.RestoreWindow(window);
             }

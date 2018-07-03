@@ -1,11 +1,11 @@
-﻿using System;
+﻿using DealerBase.Entities;
+using Microsoft.Win32;
+using System;
+using System.Data;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using DealerBase.Entities;
-using System.Data;
-using Microsoft.Win32;
-using System.IO;
 
 namespace DealerBase.Windows
 {
@@ -73,16 +73,18 @@ namespace DealerBase.Windows
 
         private void Add_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Entities.BusinessEntity.Count() != 0 && Entities.Activity.Count() != 0 && Entities.ActivityDirection.Count() != 0;
+            e.CanExecute = BusinessEntity.Count() != 0 && Entities.Activity.Count() != 0 && Entities.ActivityDirection.Count() != 0;
         }
 
         private void Add_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            DealerWindow dealerWindow = new DealerWindow();
-            dealerWindow.Owner = this;
+            DealerWindow dealerWindow = new DealerWindow()
+            {
+                Owner = this
+            };
             if ((bool)dealerWindow.ShowDialog())
             {
-                if (Entities.BusinessEntity.Exists(dealerWindow.Dealer.BusinessEntityId) && Entities.Activity.Exists(dealerWindow.Dealer.ActivityId) && Entities.ActivityDirection.Exists(dealerWindow.Dealer.ActivityDirectionId))
+                if (BusinessEntity.Exists(dealerWindow.Dealer.BusinessEntityId) && Entities.Activity.Exists(dealerWindow.Dealer.ActivityId) && Entities.ActivityDirection.Exists(dealerWindow.Dealer.ActivityDirectionId))
                 {
                     long insertedDealerId = dealerWindow.Dealer.Insert();
                     Update();
@@ -92,8 +94,10 @@ namespace DealerBase.Windows
                 }
                 else
                 {
-                    ErrorWindow errorWindow = new ErrorWindow();
-                    errorWindow.Owner = this;
+                    ErrorWindow errorWindow = new ErrorWindow()
+                    {
+                        Owner = this
+                    };
                     errorWindow.ShowDialog();
                 }
             }
@@ -108,9 +112,11 @@ namespace DealerBase.Windows
         {
             if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag))
             {
-                DealerWindow dealerWindow = new DealerWindow();
-                dealerWindow.Owner = this;
-                dealerWindow.Dealer = Dealer.FromDataRow(Dealer.Select((long)(Dealers.SelectedItem as TextBlock).Tag));
+                DealerWindow dealerWindow = new DealerWindow()
+                {
+                    Owner = this,
+                    Dealer = Dealer.FromDataRow(Dealer.Select((long)(Dealers.SelectedItem as TextBlock).Tag))
+                };
                 if ((bool)dealerWindow.ShowDialog())
                 {
                     if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag) &&
@@ -123,16 +129,20 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow();
-                        errorWindow.Owner = this;
+                        ErrorWindow errorWindow = new ErrorWindow()
+                        {
+                            Owner = this
+                        };
                         errorWindow.ShowDialog();
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Owner = this;
+                ErrorWindow errorWindow = new ErrorWindow()
+                {
+                    Owner = this
+                };
                 errorWindow.ShowDialog();
             }
         }
@@ -151,8 +161,10 @@ namespace DealerBase.Windows
         {
             if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag))
             {
-                ConfirmationWindow confirmationWindow = new ConfirmationWindow();
-                confirmationWindow.Owner = this;
+                ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+                {
+                    Owner = this
+                };
                 if ((bool)confirmationWindow.ShowDialog())
                 {
                     if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag))
@@ -165,25 +177,31 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow();
-                        errorWindow.Owner = this;
+                        ErrorWindow errorWindow = new ErrorWindow()
+                        {
+                            Owner = this
+                        };
                         errorWindow.ShowDialog();
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow();
-                errorWindow.Owner = this;
+                ErrorWindow errorWindow = new ErrorWindow()
+                {
+                    Owner = this
+                };
                 errorWindow.ShowDialog();
             }
         }
 
         private void Backup_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Файл базы данных (*.db)|*.db";
-            saveFileDialog.FileName = "DealerBase_Backup.db";
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                Filter = "Файл базы данных (*.db)|*.db",
+                FileName = "DealerBase_Backup.db"
+            };
             if ((bool)saveFileDialog.ShowDialog())
             {
                 DBAccess.BackupDatabase(saveFileDialog.FileName);
@@ -197,9 +215,11 @@ namespace DealerBase.Windows
 
         private void Emails_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Текстовый файл (*.txt)|*.txt";
-            saveFileDialog.FileName = "DealerBase.txt";
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                Filter = "Текстовый файл (*.txt)|*.txt",
+                FileName = "DealerBase.txt"
+            };
             if ((bool)saveFileDialog.ShowDialog())
             {
                 Filter filter = new Filter(false);
@@ -209,8 +229,10 @@ namespace DealerBase.Windows
                 }
                 else
                 {
-                    ErrorWindow errorWindow = new ErrorWindow();
-                    errorWindow.Owner = this;
+                    ErrorWindow errorWindow = new ErrorWindow()
+                    {
+                        Owner = this
+                    };
                     errorWindow.ShowDialog();
                 }
             }
@@ -223,8 +245,10 @@ namespace DealerBase.Windows
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            PrintingWindow printingWindow = new PrintingWindow();
-            printingWindow.Owner = this;
+            PrintingWindow printingWindow = new PrintingWindow()
+            {
+                Owner = this
+            };
             printingWindow.ShowDialog();
         }
 
@@ -235,15 +259,19 @@ namespace DealerBase.Windows
 
         private void Notify_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NotificationWindow notificationWindow = new NotificationWindow();
-            notificationWindow.Owner = this;
+            NotificationWindow notificationWindow = new NotificationWindow()
+            {
+                Owner = this
+            };
             notificationWindow.ShowDialog();
         }
 
         private void Constants_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConstantsWindow constantsWindow = new ConstantsWindow();
-            constantsWindow.Owner = this;
+            ConstantsWindow constantsWindow = new ConstantsWindow()
+            {
+                Owner = this
+            };
             constantsWindow.ShowDialog();
             Update();
         }
