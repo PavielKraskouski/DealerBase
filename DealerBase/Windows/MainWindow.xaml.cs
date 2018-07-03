@@ -48,6 +48,7 @@ namespace DealerBase.Windows
 
         public MainWindow()
         {
+            DBAccess.CreateDatabase();
             InitializeComponent();
         }
 

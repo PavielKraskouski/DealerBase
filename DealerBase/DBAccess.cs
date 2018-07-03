@@ -28,29 +28,49 @@ namespace DealerBase
         private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string DBPath = Path.Combine(BaseDirectory, "DealerBase.db");
         private static readonly string DBBackupPath = Path.Combine(BaseDirectory, "DealerBase_Backup.db");
-        private static readonly string SQLPath = Path.Combine(BaseDirectory, "DealerBase.sql");
         private static readonly string DBConnectionString = String.Format("Data Source = {0}", DBPath);
+        private static readonly string DBBackupConnectionString = String.Format("Data Source = {0}", DBBackupPath);
 
         public static void CreateDatabase()
         {
-            SQLiteConnection.CreateFile(DBPath);
-            ExecuteNonQuery(File.ReadAllText(SQLPath));
+            if (!File.Exists(DBPath))
+            {
+                if (!File.Exists(DBBackupPath))
+                {
+                    SQLiteConnection.CreateFile(DBPath);
+                    ExecuteNonQuery(Properties.Resources.DealerBase);
+                }
+                else
+                {
+                    RestoreDatabase();
+                }
+            }
         }
 
-        public static void BackupDatabase()
+        private static void CloneDatabase(string sourceConnectionString, string destinationConnectionString)
         {
-            BackupDatabase(DBBackupPath);
-        }
-
-        public static void BackupDatabase(string fileName)
-        {
-            using (SQLiteConnection source = new SQLiteConnection(DBConnectionString))
-            using (SQLiteConnection destination = new SQLiteConnection(String.Format("Data Source = {0}", fileName)))
+            using (SQLiteConnection source = new SQLiteConnection(sourceConnectionString))
+            using (SQLiteConnection destination = new SQLiteConnection(destinationConnectionString))
             {
                 source.Open();
                 destination.Open();
                 source.BackupDatabase(destination, "main", "main", -1, null, -1);
             }
+        }
+
+        public static void BackupDatabase()
+        {
+            CloneDatabase(DBConnectionString, DBBackupConnectionString);
+        }
+
+        public static void BackupDatabase(string fileName)
+        {
+            CloneDatabase(DBConnectionString, String.Format("Data Source = {0}", fileName));
+        }
+
+        private static void RestoreDatabase()
+        {
+            CloneDatabase(DBBackupConnectionString, DBConnectionString);
         }
 
         private static void Execute(Action<SQLiteCommand> action, string commandText, params object[] parameters)
