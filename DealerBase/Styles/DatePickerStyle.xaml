@@ -555,7 +555,7 @@
                                                 <VisualState x:Name="Disabled"/>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <Path x:Name="Arrow" Data="{StaticResource DownArrowGeometry}" Fill="Black" HorizontalAlignment="Center" Margin="3,1,3,0" VerticalAlignment="Center"/>
+                                        <Path x:Name="Arrow" Data="{StaticResource DownArrowGeometry}" Fill="Black" HorizontalAlignment="Center" Margin="5,1,5,0" VerticalAlignment="Center"/>
                                     </Grid>
                                 </ControlTemplate>
                             </Grid.Resources>
@@ -563,7 +563,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="PART_Button" Grid.Column="1" Foreground="{TemplateBinding Foreground}" Focusable="False" Grid.Row="0" Template="{StaticResource DropDownButtonTemplate}" Width="18"/>
+                            <Button x:Name="PART_Button" Grid.Column="1" Foreground="{TemplateBinding Foreground}" Focusable="False" Grid.Row="0" Template="{StaticResource DropDownButtonTemplate}"/>
                             <DatePickerTextBox x:Name="PART_TextBox" Style="{StaticResource DatePickerTextBoxStyle}" Grid.Column="0" Focusable="{TemplateBinding Focusable}" HorizontalContentAlignment="Stretch" Grid.Row="0" VerticalContentAlignment="Stretch"/>
                             <Grid x:Name="PART_DisabledVisual" Grid.ColumnSpan="2" Grid.Column="0" IsHitTestVisible="False" Opacity="0" Grid.Row="0">
                                 <Grid.ColumnDefinitions>
