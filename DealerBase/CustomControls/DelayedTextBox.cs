@@ -16,7 +16,8 @@ namespace DealerBase.CustomControls
             Timer.Tick += new EventHandler((x, y) =>
             {
                 Timer.Stop();
-                MainWindow.Instance.Update();
+                MainWindow.Instance.UpdateDealers();
+                MainWindow.Instance.Dealers.SelectItem();
                 CommandManager.InvalidateRequerySuggested();
             });
         }

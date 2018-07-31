@@ -11,16 +11,17 @@ namespace DealerBase.Windows
     /// </summary>
     public partial class NumberAddressWindow : Window
     {
-        public string Value { get; set; }
+        public string Value { get; private set; }
 
-        public NumberAddressWindow()
+        public NumberAddressWindow(string value = null)
         {
             InitializeComponent();
+            Value = value;
+            this.FixLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ContactWindow contactWindow = this.Owner as ContactWindow;
             if (Value == null)
             {
                 Value = string.Empty;
@@ -30,7 +31,7 @@ namespace DealerBase.Windows
             {
                 Title = "Правка ";
             }
-            if (contactWindow.CommunicationMean.SelectedIndex < 2)
+            if ((Owner as ContactWindow).CommunicationMean.SelectedIndex < 2)
             {
                 Title += "номера";
                 TextBlock.Text = "Номер:";
@@ -54,7 +55,7 @@ namespace DealerBase.Windows
         {
             if (IsLoaded)
             {
-                ContactWindow contactWindow = this.Owner as ContactWindow;
+                ContactWindow contactWindow = Owner as ContactWindow;
                 switch (contactWindow.CommunicationMean.SelectedIndex)
                 {
                     case 0:

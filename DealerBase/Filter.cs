@@ -7,6 +7,12 @@ namespace DealerBase
 {
     public class Filter
     {
+        private static readonly string[] SortingMethods = new string[]
+        {
+            " ORDER BY DATETIME(DateAdded) ASC, UPPER(Dealer.Name) ASC", " ORDER BY UPPER(Dealer.Name) ASC", " ORDER BY Rating ASC, UPPER(Dealer.Name) ASC",
+            " ORDER BY DATETIME(DateAdded) DESC, UPPER(Dealer.Name) ASC", " ORDER BY UPPER(Dealer.Name) DESC", " ORDER BY Rating DESC, UPPER(Dealer.Name) ASC"
+        };
+
         public string Query { get; private set; }
         public object[] Parameters { get; private set; }
 
@@ -21,28 +27,24 @@ namespace DealerBase
             }
             if (MainWindow.Instance.Region.SelectedIndex != 0)
             {
-                parameters.Add((MainWindow.Instance.Region.Items[MainWindow.Instance.Region.SelectedIndex] as TextBlock).Tag);
+                parameters.Add((MainWindow.Instance.Region.SelectedItem as TextBlock).Tag);
                 Query += String.Format(" AND RegionId = @param{0}", parameters.Count);
             }
             if (MainWindow.Instance.Activity.SelectedIndex != 0)
             {
-                parameters.Add((MainWindow.Instance.Activity.Items[MainWindow.Instance.Activity.SelectedIndex] as TextBlock).Tag);
+                parameters.Add((MainWindow.Instance.Activity.SelectedItem as TextBlock).Tag);
                 Query += String.Format(" AND ActivityId = @param{0}", parameters.Count);
             }
             if (MainWindow.Instance.ActivityDirection.SelectedIndex != 0)
             {
-                parameters.Add((MainWindow.Instance.ActivityDirection.Items[MainWindow.Instance.ActivityDirection.SelectedIndex] as TextBlock).Tag);
+                parameters.Add((MainWindow.Instance.ActivityDirection.SelectedItem as TextBlock).Tag);
                 Query += String.Format(" AND ActivityDirectionId = @param{0}", parameters.Count);
             }
             parameters.Add(1 - MainWindow.Instance.Relevance.SelectedIndex);
             Query += String.Format(" AND IsRelevant = @param{0}", parameters.Count);
             if (ordered)
             {
-                Query += new[]
-                {
-                    " ORDER BY DATETIME(DateAdded) ASC, UPPER(Dealer.Name) ASC", " ORDER BY UPPER(Dealer.Name) ASC", " ORDER BY Rating ASC, UPPER(Dealer.Name) ASC",
-                    " ORDER BY DATETIME(DateAdded) DESC, UPPER(Dealer.Name) ASC", " ORDER BY UPPER(Dealer.Name) DESC", " ORDER BY Rating DESC, UPPER(Dealer.Name) ASC"
-                }[MainWindow.Instance.Sort.SelectedIndex];
+                Query += SortingMethods[MainWindow.Instance.Sort.SelectedIndex];
             }
             Parameters = parameters.ToArray();
         }

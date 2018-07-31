@@ -1,7 +1,7 @@
 ﻿<Window x:Class="DealerBase.Windows.ConstantWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        SizeToContent="Height" Width="350" ResizeMode="NoResize" Loaded="Window_Loaded"
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}">
     <Window.Resources>
         <RoutedUICommand x:Key="Save"/>
@@ -19,8 +19,8 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Height="40" Content="Сохранить" IsDefault="True" Command="{StaticResource Save}"/>
-                <Button Grid.Column="2" Height="40" Content="Отмена" Click="Cancel_Click"/>
+                <Button Width="130" Height="40" Content="Сохранить" IsDefault="True" Command="{StaticResource Save}"/>
+                <Button Grid.Column="2" Width="130" Height="40" Content="Отмена" Click="Cancel_Click"/>
             </Grid>
         </StackPanel>
     </Border>

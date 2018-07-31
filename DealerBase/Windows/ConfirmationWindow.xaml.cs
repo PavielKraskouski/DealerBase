@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Media;
+using System.Windows;
 
 namespace DealerBase.Windows
 {
@@ -10,6 +11,8 @@ namespace DealerBase.Windows
         public ConfirmationWindow()
         {
             InitializeComponent();
+            SystemSounds.Exclamation.Play();
+            this.FixLayout();
         }
 
         private void Yes_Click(object sender, RoutedEventArgs e)

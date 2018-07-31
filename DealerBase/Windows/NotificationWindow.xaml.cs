@@ -31,58 +31,53 @@ namespace DealerBase.Windows
             });
         }
 
+        private void ShowErrorWindow(byte errorCode)
+        {
+            new ErrorWindow(errorCode).ShowDialog(this);
+            UpdateEvents();
+            Events.SelectItem();
+        }
+
         public NotificationWindow()
         {
             InitializeComponent();
+            this.FixLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateEvents();
-            Events.SelectedIndex = 0;
+            Events.SelectItem();
         }
 
-        private void Edit_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+        private void Edit_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = Events.SelectedItem != null;
         }
 
-        private void Edit_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        private void Edit_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
             {
-                EventWindow eventWindow = new EventWindow()
-                {
-                    Owner = this,
-                    Event = Event.FromDataRow(Event.SelectOne((long)(Events.SelectedItem as TextBlock).Tag))
-                };
-                if ((bool)eventWindow.ShowDialog())
+                EventWindow eventWindow = new EventWindow(Event.FromDataRow(Event.SelectOne((long)(Events.SelectedItem as TextBlock).Tag)));
+                if ((bool)eventWindow.ShowDialog(this))
                 {
                     if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
                     {
                         long selectedEventId = (long)(Events.SelectedItem as TextBlock).Tag;
                         eventWindow.Event.Update();
                         UpdateEvents();
-                        Events.SelectedItem = Events.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedEventId);
-                        Events.ScrollIntoView(Events.SelectedItem);
+                        Events.SelectItem(Events.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedEventId));
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow()
-                        {
-                            Owner = this
-                        };
-                        errorWindow.ShowDialog();
+                        ShowErrorWindow(2);
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow()
-                {
-                    Owner = this
-                };
-                errorWindow.ShowDialog();
+                ShowErrorWindow(2);
             }
         }
 
@@ -100,37 +95,23 @@ namespace DealerBase.Windows
         {
             if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
             {
-                ConfirmationWindow confirmationWindow = new ConfirmationWindow()
-                {
-                    Owner = this
-                };
-                if ((bool)confirmationWindow.ShowDialog())
+                if ((bool)new ConfirmationWindow().ShowDialog(this))
                 {
                     if (Event.Exists((long)(Events.SelectedItem as TextBlock).Tag))
                     {
-                        int selectedIndex = Events.SelectedIndex;
                         Event.DeleteOne((long)(Events.SelectedItem as TextBlock).Tag);
                         UpdateEvents();
-                        Events.SelectedIndex = Math.Max(0, Math.Min(Events.Items.Count - 1, selectedIndex - 1));
-                        Events.ScrollIntoView(Events.SelectedItem);
+                        Events.SelectItem();
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow()
-                        {
-                            Owner = this
-                        };
-                        errorWindow.ShowDialog();
+                        ShowErrorWindow(3);
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow()
-                {
-                    Owner = this
-                };
-                errorWindow.ShowDialog();
+                ShowErrorWindow(3);
             }
         }
     }

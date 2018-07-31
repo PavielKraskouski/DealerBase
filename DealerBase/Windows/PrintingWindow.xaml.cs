@@ -94,21 +94,13 @@ namespace DealerBase.Windows
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow()
-                        {
-                            Owner = this
-                        };
-                        errorWindow.ShowDialog();
+                        new ErrorWindow(5).ShowDialog(this);
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow()
-                {
-                    Owner = this
-                };
-                errorWindow.ShowDialog();
+                new ErrorWindow(5).ShowDialog(this);
             }
         }
     }

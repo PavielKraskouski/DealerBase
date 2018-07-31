@@ -1,7 +1,7 @@
 ﻿<Window x:Class="DealerBase.Windows.EventWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        SizeToContent="Height" Width="350" ResizeMode="NoResize" Loaded="Window_Loaded"
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}">
     <Window.Resources>
         <RoutedUICommand x:Key="Accept"/>
@@ -23,8 +23,8 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Accept" Height="40" Content="OK" IsDefault="True" Command="{StaticResource Accept}"/>
-                <Button Grid.Column="2" Height="40" Content="Отмена" Click="Cancel_Click"/>
+                <Button x:Name="Accept" Width="130" Height="40" Content="OK" IsDefault="True" Command="{StaticResource Accept}"/>
+                <Button Grid.Column="2" Width="130" Height="40" Content="Отмена" Click="Cancel_Click"/>
             </Grid>
         </StackPanel>
     </Border>

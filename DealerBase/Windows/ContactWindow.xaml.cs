@@ -13,7 +13,7 @@ namespace DealerBase.Windows
     /// </summary>
     public partial class ContactWindow : Window
     {
-        public Contact Contact { get; set; }
+        public Contact Contact { get; private set; }
 
         private void UpdateValues()
         {
@@ -32,9 +32,11 @@ namespace DealerBase.Windows
             }
         }
 
-        public ContactWindow()
+        public ContactWindow(Contact contact = null)
         {
             InitializeComponent();
+            Contact = contact;
+            this.FixLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -51,7 +53,7 @@ namespace DealerBase.Windows
                 Patronymic.Text = Contact.Patronymic;
                 Position.Text = Contact.Position;
                 UpdateValues();
-                Values.SelectedIndex = 0;
+                Values.SelectItem();
                 Title = "Правка контактного лица";
             }
         }
@@ -70,18 +72,14 @@ namespace DealerBase.Windows
             {
                 TextBlock.Text = CommunicationMean.SelectedIndex < 2 ? "Список номеров:" : "Список адресов:";
                 UpdateValues();
-                Values.SelectedIndex = 0;
-                Values.ScrollIntoView(Values.SelectedItem);
+                Values.SelectItem();
             }
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            NumberAddressWindow numberAddressWindow = new NumberAddressWindow()
-            {
-                Owner = this
-            };
-            if ((bool)numberAddressWindow.ShowDialog())
+            NumberAddressWindow numberAddressWindow = new NumberAddressWindow();
+            if ((bool)numberAddressWindow.ShowDialog(this))
             {
                 long insertedValueId;
                 switch (CommunicationMean.SelectedIndex)
@@ -112,8 +110,7 @@ namespace DealerBase.Windows
                         break;
                 }
                 UpdateValues();
-                Values.SelectedItem = Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == insertedValueId);
-                Values.ScrollIntoView(Values.SelectedItem);
+                Values.SelectItem(Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == insertedValueId));
             }
         }
 
@@ -124,12 +121,8 @@ namespace DealerBase.Windows
 
         private void Edit_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NumberAddressWindow numberAddressWindow = new NumberAddressWindow()
-            {
-                Owner = this,
-                Value = (Values.SelectedItem as TextBlock).Text
-            };
-            if ((bool)numberAddressWindow.ShowDialog())
+            NumberAddressWindow numberAddressWindow = new NumberAddressWindow((Values.SelectedItem as TextBlock).Text);
+            if ((bool)numberAddressWindow.ShowDialog(this))
             {
                 long selectedValueId = (long)(Values.SelectedItem as TextBlock).Tag;
                 switch (CommunicationMean.SelectedIndex)
@@ -145,8 +138,7 @@ namespace DealerBase.Windows
                         break;
                 }
                 UpdateValues();
-                Values.SelectedItem = Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedValueId);
-                Values.ScrollIntoView(Values.SelectedItem);
+                Values.SelectItem(Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedValueId));
             }
         }
 
@@ -162,13 +154,8 @@ namespace DealerBase.Windows
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+            if ((bool)new ConfirmationWindow().ShowDialog(this))
             {
-                Owner = this
-            };
-            if ((bool)confirmationWindow.ShowDialog())
-            {
-                int selectedValueIndex = Values.SelectedIndex;
                 switch (CommunicationMean.SelectedIndex)
                 {
                     case 0:
@@ -182,8 +169,7 @@ namespace DealerBase.Windows
                         break;
                 }
                 UpdateValues();
-                Values.SelectedIndex = Math.Max(0, selectedValueIndex - 1);
-                Values.ScrollIntoView(Values.SelectedItem);
+                Values.SelectItem();
             }
         }
 

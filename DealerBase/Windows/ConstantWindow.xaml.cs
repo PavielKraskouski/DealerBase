@@ -9,11 +9,13 @@ namespace DealerBase.Windows
     /// </summary>
     public partial class ConstantWindow : Window
     {
-        public string Value { get; set; }
+        public string Value { get; private set; }
 
-        public ConstantWindow()
+        public ConstantWindow(string value = null)
         {
             InitializeComponent();
+            Value = value;
+            this.FixLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -40,8 +42,7 @@ namespace DealerBase.Windows
         {
             if (TextBox.Text != string.Empty)
             {
-                ConstantsWindow constantsWindow = this.Owner as ConstantsWindow;
-                switch (constantsWindow.Constant.SelectedIndex)
+                switch ((Owner as ConstantsWindow).Constant.SelectedIndex)
                 {
                     case 0:
                         e.CanExecute = !(Value.ToUpper() != TextBox.Text.ToUpper() && BusinessEntity.Exists(TextBox.Text));

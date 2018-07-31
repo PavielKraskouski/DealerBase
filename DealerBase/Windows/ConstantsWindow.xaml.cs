@@ -1,5 +1,4 @@
 ﻿using DealerBase.Entities;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -54,15 +53,26 @@ namespace DealerBase.Windows
             }
         }
 
+        private void ShowErrorWindow(byte errorCode, bool updateValues = true)
+        {
+            new ErrorWindow(errorCode).ShowDialog(this);
+            if (updateValues)
+            {
+                UpdateValues();
+                Values.SelectItem();
+            }
+        }
+
         public ConstantsWindow()
         {
             InitializeComponent();
+            this.FixLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateValues();
-            Values.SelectedIndex = 0;
+            Values.SelectItem();
         }
 
         private void Constant_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -70,18 +80,14 @@ namespace DealerBase.Windows
             if (Constant.IsLoaded)
             {
                 UpdateValues();
-                Values.SelectedIndex = 0;
-                Values.ScrollIntoView(Values.SelectedItem);
+                Values.SelectItem();
             }
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            ConstantWindow constantWindow = new ConstantWindow()
-            {
-                Owner = this
-            };
-            if ((bool)constantWindow.ShowDialog())
+            ConstantWindow constantWindow = new ConstantWindow();
+            if ((bool)constantWindow.ShowDialog(this))
             {
                 long insertedValueId;
                 switch (Constant.SelectedIndex)
@@ -97,8 +103,7 @@ namespace DealerBase.Windows
                         break;
                 }
                 UpdateValues();
-                Values.SelectedItem = Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == insertedValueId);
-                Values.ScrollIntoView(Values.SelectedItem);
+                Values.SelectItem(Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == insertedValueId));
             }
         }
 
@@ -111,12 +116,8 @@ namespace DealerBase.Windows
         {
             if (ValueExists())
             {
-                ConstantWindow constantWindow = new ConstantWindow()
-                {
-                    Owner = this,
-                    Value = (Values.SelectedItem as TextBlock).Text
-                };
-                if ((bool)constantWindow.ShowDialog())
+                ConstantWindow constantWindow = new ConstantWindow((Values.SelectedItem as TextBlock).Text);
+                if ((bool)constantWindow.ShowDialog(this))
                 {
                     if (ValueExists())
                     {
@@ -134,26 +135,17 @@ namespace DealerBase.Windows
                                 break;
                         }
                         UpdateValues();
-                        Values.SelectedItem = Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedValueId);
-                        Values.ScrollIntoView(Values.SelectedItem);
+                        Values.SelectItem(Values.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedValueId));
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow()
-                        {
-                            Owner = this
-                        };
-                        errorWindow.ShowDialog();
+                        ShowErrorWindow(2);
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow()
-                {
-                    Owner = this
-                };
-                errorWindow.ShowDialog();
+                ShowErrorWindow(2);
             }
         }
 
@@ -171,48 +163,41 @@ namespace DealerBase.Windows
         {
             if (ValueExists())
             {
-                ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+                if ((bool)new ConfirmationWindow().ShowDialog(this))
                 {
-                    Owner = this
-                };
-                if ((bool)confirmationWindow.ShowDialog())
-                {
-                    if (ValueExists() && !DealerExists())
+                    if (ValueExists())
                     {
-                        int selectedIndex = Values.SelectedIndex;
-                        switch (Constant.SelectedIndex)
+                        if (!DealerExists())
                         {
-                            case 0:
-                                BusinessEntity.Delete((long)(Values.SelectedItem as TextBlock).Tag);
-                                break;
-                            case 1:
-                                Activity.Delete((long)(Values.SelectedItem as TextBlock).Tag);
-                                break;
-                            case 2:
-                                ActivityDirection.Delete((long)(Values.SelectedItem as TextBlock).Tag);
-                                break;
+                            switch (Constant.SelectedIndex)
+                            {
+                                case 0:
+                                    BusinessEntity.Delete((long)(Values.SelectedItem as TextBlock).Tag);
+                                    break;
+                                case 1:
+                                    Activity.Delete((long)(Values.SelectedItem as TextBlock).Tag);
+                                    break;
+                                case 2:
+                                    ActivityDirection.Delete((long)(Values.SelectedItem as TextBlock).Tag);
+                                    break;
+                            }
+                            UpdateValues();
+                            Values.SelectItem();
                         }
-                        UpdateValues();
-                        Values.SelectedIndex = Math.Max(0, Math.Min(Values.Items.Count - 1, selectedIndex - 1));
-                        Values.ScrollIntoView(Values.SelectedItem);
+                        else
+                        {
+                            ShowErrorWindow(4, false);
+                        }
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow()
-                        {
-                            Owner = this
-                        };
-                        errorWindow.ShowDialog();
+                        ShowErrorWindow(3);
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow()
-                {
-                    Owner = this
-                };
-                errorWindow.ShowDialog();
+                ShowErrorWindow(3);
             }
         }
     }

@@ -11,11 +11,13 @@ namespace DealerBase.Windows
     /// </summary>
     public partial class EventWindow : Window
     {
-        public Event Event { get; set; }
+        public Event Event { get; private set; }
 
-        public EventWindow()
+        public EventWindow(Event _event = null)
         {
             InitializeComponent();
+            Event = _event;
+            this.FixLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

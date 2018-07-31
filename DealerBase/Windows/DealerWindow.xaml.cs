@@ -14,7 +14,7 @@ namespace DealerBase.Windows
     /// </summary>
     public partial class DealerWindow : Window
     {
-        public Dealer Dealer { get; set; }
+        public Dealer Dealer { get; private set; }
 
         private void UpdateContacts()
         {
@@ -45,9 +45,11 @@ namespace DealerBase.Windows
             }
         }
 
-        public DealerWindow()
+        public DealerWindow(Dealer dealer = null)
         {
             InitializeComponent();
+            Dealer = dealer;
+            this.FixLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -59,32 +61,32 @@ namespace DealerBase.Windows
             if (Dealer == null)
             {
                 Dealer = new Dealer();
-                BusinessEntity.SelectedIndex = 0;
-                Activity.SelectedIndex = 0;
-                ActivityDirection.SelectedIndex = 0;
-                Region.SelectedIndex = 0;
+                BusinessEntity.SelectItem();
+                Activity.SelectItem();
+                ActivityDirection.SelectItem();
+                Region.SelectItem();
                 Title = "Добавление дилера";
             }
             else
             {
-                BusinessEntity.SelectedItem = BusinessEntity.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.BusinessEntityId);
+                BusinessEntity.SelectItem(BusinessEntity.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.BusinessEntityId));
                 _Name.Text = Dealer.Name;
-                Activity.SelectedItem = Activity.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.ActivityId);
-                ActivityDirection.SelectedItem = ActivityDirection.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.ActivityDirectionId);
-                Rating.SelectedIndex = 5 - (int)Dealer.Rating;
-                Relevance.SelectedIndex = Dealer.IsRelevant ? 0 : 1;
-                Region.SelectedItem = Region.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.RegionId);
+                Activity.SelectItem(Activity.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.ActivityId));
+                ActivityDirection.SelectItem(ActivityDirection.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.ActivityDirectionId));
+                Rating.SelectItem(selectedIndex: 5 - (int)Dealer.Rating);
+                Relevance.SelectItem(selectedIndex: Dealer.IsRelevant ? 0 : 1);
+                Region.SelectItem(Region.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == Dealer.RegionId));
                 City.Text = Dealer.City;
                 Street.Text = Dealer.Street;
                 House.Text = Dealer.House;
                 Block.Text = Dealer.Block;
                 Room.Text = Dealer.Room;
                 UpdateContacts();
-                Contacts.SelectedIndex = 0;
+                Contacts.SelectItem();
                 Note.Text = Dealer.Note;
                 Conditions.Text = Dealer.Conditions;
                 UpdateEvents();
-                Events.SelectedIndex = 1;
+                Events.SelectItem(selectedIndex: 1);
                 Title = "Правка дилера";
             }
         }
@@ -111,17 +113,13 @@ namespace DealerBase.Windows
 
         private void AddContact_Click(object sender, RoutedEventArgs e)
         {
-            ContactWindow contactWindow = new ContactWindow()
-            {
-                Owner = this
-            };
-            if ((bool)contactWindow.ShowDialog())
+            ContactWindow contactWindow = new ContactWindow();
+            if ((bool)contactWindow.ShowDialog(this))
             {
                 contactWindow.Contact.Id = Dealer.Contacts.Count != 0 ? Dealer.Contacts.Max(x => x.Id) + 1 : 1;
                 Dealer.Contacts.Add(contactWindow.Contact);
                 UpdateContacts();
-                Contacts.SelectedItem = Contacts.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == contactWindow.Contact.Id);
-                Contacts.ScrollIntoView(Contacts.SelectedItem);
+                Contacts.SelectItem(Contacts.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == contactWindow.Contact.Id));
             }
         }
 
@@ -132,17 +130,12 @@ namespace DealerBase.Windows
 
         private void EditContact_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ContactWindow contactWindow = new ContactWindow()
-            {
-                Owner = this,
-                Contact = Dealer.Contacts.First(x => x.Id == (long)(Contacts.SelectedItem as TextBlock).Tag).Clone()
-            };
-            if ((bool)contactWindow.ShowDialog())
+            ContactWindow contactWindow = new ContactWindow(Dealer.Contacts.First(x => x.Id == (long)(Contacts.SelectedItem as TextBlock).Tag).Clone());
+            if ((bool)contactWindow.ShowDialog(this))
             {
                 Dealer.Contacts[Dealer.Contacts.FindIndex(x => x.Id == contactWindow.Contact.Id)] = contactWindow.Contact;
                 UpdateContacts();
-                Contacts.SelectedItem = Contacts.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == contactWindow.Contact.Id);
-                Contacts.ScrollIntoView(Contacts.SelectedItem);
+                Contacts.SelectItem(Contacts.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == contactWindow.Contact.Id));
             }
         }
 
@@ -158,33 +151,23 @@ namespace DealerBase.Windows
 
         private void DeleteContact_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+            if ((bool)new ConfirmationWindow().ShowDialog(this))
             {
-                Owner = this
-            };
-            if ((bool)confirmationWindow.ShowDialog())
-            {
-                int selectedIndex = Contacts.SelectedIndex;
                 Dealer.Contacts.Remove(Dealer.Contacts.First(x => x.Id == (long)(Contacts.SelectedItem as TextBlock).Tag));
                 UpdateContacts();
-                Contacts.SelectedIndex = Math.Max(0, selectedIndex - 1);
-                Contacts.ScrollIntoView(Contacts.SelectedItem);
+                Contacts.SelectItem();
             }
         }
 
         private void AddEvent_Click(object sender, RoutedEventArgs e)
         {
-            EventWindow eventWindow = new EventWindow()
-            {
-                Owner = this
-            };
-            if ((bool)eventWindow.ShowDialog())
+            EventWindow eventWindow = new EventWindow();
+            if ((bool)eventWindow.ShowDialog(this))
             {
                 eventWindow.Event.Id = Dealer.Events.Count != 0 ? Dealer.Events.Max(x => x.Id) + 1 : 1;
                 Dealer.Events.Add(eventWindow.Event);
                 UpdateEvents();
-                Events.SelectedItem = Events.Items.FirstOrDefault<FrameworkElement>(x => x.Tag is long && (long)x.Tag == eventWindow.Event.Id);
-                Events.ScrollIntoView(Events.SelectedItem);
+                Events.SelectItem(Events.Items.FirstOrDefault<FrameworkElement>(x => x.Tag is long && (long)x.Tag == eventWindow.Event.Id));
             }
         }
 
@@ -195,17 +178,12 @@ namespace DealerBase.Windows
 
         private void EditEvent_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            EventWindow eventWindow = new EventWindow()
-            {
-                Owner = this,
-                Event = Dealer.Events.First(x => x.Id == (long)(Events.SelectedItem as TextBlock).Tag).Clone()
-            };
-            if ((bool)eventWindow.ShowDialog())
+            EventWindow eventWindow = new EventWindow(Dealer.Events.First(x => x.Id == (long)(Events.SelectedItem as TextBlock).Tag).Clone());
+            if ((bool)eventWindow.ShowDialog(this))
             {
                 Dealer.Events[Dealer.Events.FindIndex(x => x.Id == eventWindow.Event.Id)] = eventWindow.Event;
                 UpdateEvents();
-                Events.SelectedItem = Events.Items.FirstOrDefault<FrameworkElement>(x => x.Tag is long && (long)x.Tag == eventWindow.Event.Id);
-                Events.ScrollIntoView(Events.SelectedItem);
+                Events.SelectItem(Events.Items.FirstOrDefault<FrameworkElement>(x => x.Tag is long && (long)x.Tag == eventWindow.Event.Id));
             }
         }
 
@@ -221,17 +199,11 @@ namespace DealerBase.Windows
 
         private void DeleteEvent_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConfirmationWindow confirmationWindow = new ConfirmationWindow()
+            if ((bool)new ConfirmationWindow().ShowDialog(this))
             {
-                Owner = this
-            };
-            if ((bool)confirmationWindow.ShowDialog())
-            {
-                int selectedIndex = Events.SelectedIndex;
                 Dealer.Events.Remove(Dealer.Events.First(x => x.Id == (long)(Events.SelectedItem as TextBlock).Tag));
                 UpdateEvents();
-                Events.SelectedIndex = selectedIndex != 1 ? (Events.Items[Math.Min(Events.Items.Count - 1, selectedIndex - 1)] is TextBlock ? Math.Min(Events.Items.Count - 1, selectedIndex - 1) : Math.Min(Events.Items.Count - 1, selectedIndex - 2)) : 1;
-                Events.ScrollIntoView(Events.SelectedItem);
+                Events.SelectItem(selectedIndex: 1);
             }
         }
 

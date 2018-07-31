@@ -1,7 +1,7 @@
 ﻿<Window x:Class="DealerBase.Windows.ConstantsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Управление константами" SizeToContent="Height" Width="450" ResizeMode="NoResize"
+        Title="Управление константами" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}" Loaded="Window_Loaded">
     <Window.Resources>
         <RoutedUICommand x:Key="Edit"/>
@@ -35,9 +35,9 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Height="40" Content="Добавить" Click="Add_Click"/>
-                <Button x:Name="Edit" Grid.Column="2" Height="40" Content="Изменить" Command="{StaticResource Edit}"/>
-                <Button Grid.Column="4" Height="40" Content="Удалить" Command="{StaticResource Delete}"/>
+                <Button Width="130" Height="40" Content="Добавить" Click="Add_Click"/>
+                <Button x:Name="Edit" Grid.Column="2" Width="130" Height="40" Content="Изменить" Command="{StaticResource Edit}"/>
+                <Button Grid.Column="4" Width="130" Height="40" Content="Удалить" Command="{StaticResource Delete}"/>
             </Grid>
         </StackPanel>
     </Border>

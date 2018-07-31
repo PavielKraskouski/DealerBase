@@ -16,11 +16,6 @@ namespace DealerBase.Entities
             return DBAccess.ExecuteReader("SELECT * FROM Region WHERE Id = @param1", id).First();
         }
 
-        public static bool Exists(long id)
-        {
-            return DBAccess.ExecuteScalar<long>("SELECT COUNT(*) FROM Region WHERE Id = @param1", id) != 0;
-        }
-
         public static TextBlock ToTextBlock(DataRow dataRow)
         {
             return new TextBlock()

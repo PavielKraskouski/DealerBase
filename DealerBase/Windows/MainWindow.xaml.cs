@@ -16,34 +16,34 @@ namespace DealerBase.Windows
     {
         public static MainWindow Instance { get; private set; }
 
-        public void Update()
+        public void UpdateDealers()
         {
             long selectedRegionId = (long)(Region.SelectedItem as TextBlock).Tag;
             long selectedActivityId = (long)(Activity.SelectedItem as TextBlock).Tag;
             long selectedActivityDirectionId = (long)(ActivityDirection.SelectedItem as TextBlock).Tag;
-            bool regionExists() => selectedRegionId == 0 || Entities.Region.Exists(selectedRegionId);
-            bool activityExists() => selectedActivityId == 0 || Entities.Activity.Exists(selectedActivityId);
-            bool activityDirectionExists() => selectedActivityDirectionId == 0 || Entities.ActivityDirection.Exists(selectedActivityDirectionId);
             Region.Items.RemoveRange(1, Region.Items.Count - 1);
             Entities.Region.Select().ForEach(x => Region.Items.Add(Entities.Region.ToTextBlock(x)));
-            Region.SelectedIndex = regionExists() ? Region.Items.IndexOf(Region.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedRegionId)) : 0;
+            Region.SelectItem(Region.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedRegionId));
             Activity.Items.RemoveRange(1, Activity.Items.Count - 1);
             Entities.Activity.Select().ForEach(x => Activity.Items.Add(Entities.Activity.ToTextBlock(x)));
-            Activity.SelectedIndex = activityExists() ? Activity.Items.IndexOf(Activity.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedActivityId)) : 0;
+            Activity.SelectItem(Activity.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedActivityId));
             ActivityDirection.Items.RemoveRange(1, ActivityDirection.Items.Count - 1);
             Entities.ActivityDirection.Select().ForEach(x => ActivityDirection.Items.Add(Entities.ActivityDirection.ToTextBlock(x)));
-            ActivityDirection.SelectedIndex = activityDirectionExists() ? ActivityDirection.Items.IndexOf(ActivityDirection.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedActivityDirectionId)) : 0;
+            ActivityDirection.SelectItem(ActivityDirection.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedActivityDirectionId));
             Region.Tag = (Region.SelectedItem as TextBlock).Tag;
             Activity.Tag = (Activity.SelectedItem as TextBlock).Tag;
             ActivityDirection.Tag = (ActivityDirection.SelectedItem as TextBlock).Tag;
             Relevance.Tag = (long)Relevance.SelectedIndex;
             Sort.Tag = (long)Sort.SelectedIndex;
-            long selectedDealerId = Dealers.SelectedItem != null ? (long)(Dealers.SelectedItem as TextBlock).Tag : 0;
             Dealers.Items.Clear();
             Dealer.Select(new Filter(true)).ForEach(x => Dealers.Items.Add(Dealer.ToTextBlock(x)));
-            TextBlock selectedDealer = Dealers.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedDealerId);
-            Dealers.SelectedIndex = selectedDealer != null ? Dealers.Items.IndexOf(selectedDealer) : 0;
-            Dealers.ScrollIntoView(Dealers.SelectedItem);
+        }
+
+        private void ShowErrorWindow(byte errorCode)
+        {
+            new ErrorWindow(errorCode).ShowDialog(this);
+            UpdateDealers();
+            Dealers.SelectItem();
         }
 
         public MainWindow()
@@ -55,7 +55,8 @@ namespace DealerBase.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Instance = this;
-            Update();
+            UpdateDealers();
+            Dealers.SelectItem();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -68,7 +69,8 @@ namespace DealerBase.Windows
             ComboBox comboBox = sender as ComboBox;
             if ((long)comboBox.Tag != (long)(comboBox.SelectedItem as TextBlock).Tag)
             {
-                Update();
+                UpdateDealers();
+                Dealers.SelectItem();
             }
         }
 
@@ -79,27 +81,20 @@ namespace DealerBase.Windows
 
         private void Add_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            DealerWindow dealerWindow = new DealerWindow()
+            DealerWindow dealerWindow = new DealerWindow();
+            if ((bool)dealerWindow.ShowDialog(this))
             {
-                Owner = this
-            };
-            if ((bool)dealerWindow.ShowDialog())
-            {
-                if (BusinessEntity.Exists(dealerWindow.Dealer.BusinessEntityId) && Entities.Activity.Exists(dealerWindow.Dealer.ActivityId) && Entities.ActivityDirection.Exists(dealerWindow.Dealer.ActivityDirectionId))
+                if (BusinessEntity.Exists(dealerWindow.Dealer.BusinessEntityId) &&
+                    Entities.Activity.Exists(dealerWindow.Dealer.ActivityId) &&
+                    Entities.ActivityDirection.Exists(dealerWindow.Dealer.ActivityDirectionId))
                 {
                     long insertedDealerId = dealerWindow.Dealer.Insert();
-                    Update();
-                    TextBlock insertedDealer = Dealers.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == insertedDealerId);
-                    Dealers.SelectedIndex = insertedDealer != null ? Dealers.Items.IndexOf(insertedDealer) : Dealers.SelectedIndex;
-                    Dealers.ScrollIntoView(Dealers.SelectedItem);
+                    UpdateDealers();
+                    Dealers.SelectItem(Dealers.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == insertedDealerId));
                 }
                 else
                 {
-                    ErrorWindow errorWindow = new ErrorWindow()
-                    {
-                        Owner = this
-                    };
-                    errorWindow.ShowDialog();
+                    ShowErrorWindow(0);
                 }
             }
         }
@@ -113,38 +108,34 @@ namespace DealerBase.Windows
         {
             if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag))
             {
-                DealerWindow dealerWindow = new DealerWindow()
+                DealerWindow dealerWindow = new DealerWindow(Dealer.FromDataRow(Dealer.Select((long)(Dealers.SelectedItem as TextBlock).Tag)));
+                if ((bool)dealerWindow.ShowDialog(this))
                 {
-                    Owner = this,
-                    Dealer = Dealer.FromDataRow(Dealer.Select((long)(Dealers.SelectedItem as TextBlock).Tag))
-                };
-                if ((bool)dealerWindow.ShowDialog())
-                {
-                    if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag) &&
-                        BusinessEntity.Exists(dealerWindow.Dealer.BusinessEntityId) &&
-                        Entities.Activity.Exists(dealerWindow.Dealer.ActivityId) &&
-                        Entities.ActivityDirection.Exists(dealerWindow.Dealer.ActivityDirectionId))
+                    if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag))
                     {
-                        dealerWindow.Dealer.Update();
-                        Update();
+                        if (BusinessEntity.Exists(dealerWindow.Dealer.BusinessEntityId) &&
+                            Entities.Activity.Exists(dealerWindow.Dealer.ActivityId) &&
+                            Entities.ActivityDirection.Exists(dealerWindow.Dealer.ActivityDirectionId))
+                        {
+                            long selectedDealerId = (long)(Dealers.SelectedItem as TextBlock).Tag;
+                            dealerWindow.Dealer.Update();
+                            UpdateDealers();
+                            Dealers.SelectItem(Dealers.Items.FirstOrDefault<TextBlock>(x => (long)x.Tag == selectedDealerId));
+                        }
+                        else
+                        {
+                            ShowErrorWindow(1);
+                        }
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow()
-                        {
-                            Owner = this
-                        };
-                        errorWindow.ShowDialog();
+                        ShowErrorWindow(2);
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow()
-                {
-                    Owner = this
-                };
-                errorWindow.ShowDialog();
+                ShowErrorWindow(2);
             }
         }
 
@@ -162,37 +153,23 @@ namespace DealerBase.Windows
         {
             if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag))
             {
-                ConfirmationWindow confirmationWindow = new ConfirmationWindow()
-                {
-                    Owner = this
-                };
-                if ((bool)confirmationWindow.ShowDialog())
+                if ((bool)new ConfirmationWindow().ShowDialog(this))
                 {
                     if (Dealer.Exists((long)(Dealers.SelectedItem as TextBlock).Tag))
                     {
-                        int selectedIndex = Dealers.SelectedIndex;
                         Dealer.Delete((long)(Dealers.SelectedItem as TextBlock).Tag);
-                        Update();
-                        Dealers.SelectedIndex = Math.Max(0, Math.Min(Dealers.Items.Count - 1, selectedIndex - 1));
-                        Dealers.ScrollIntoView(Dealers.SelectedItem);
+                        UpdateDealers();
+                        Dealers.SelectItem();
                     }
                     else
                     {
-                        ErrorWindow errorWindow = new ErrorWindow()
-                        {
-                            Owner = this
-                        };
-                        errorWindow.ShowDialog();
+                        ShowErrorWindow(3);
                     }
                 }
             }
             else
             {
-                ErrorWindow errorWindow = new ErrorWindow()
-                {
-                    Owner = this
-                };
-                errorWindow.ShowDialog();
+                ShowErrorWindow(3);
             }
         }
 
@@ -230,11 +207,7 @@ namespace DealerBase.Windows
                 }
                 else
                 {
-                    ErrorWindow errorWindow = new ErrorWindow()
-                    {
-                        Owner = this
-                    };
-                    errorWindow.ShowDialog();
+                    ShowErrorWindow(6);
                 }
             }
         }
@@ -246,11 +219,7 @@ namespace DealerBase.Windows
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            PrintingWindow printingWindow = new PrintingWindow()
-            {
-                Owner = this
-            };
-            printingWindow.ShowDialog();
+            new PrintingWindow().ShowDialog(this);
         }
 
         private void Notify_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -260,26 +229,20 @@ namespace DealerBase.Windows
 
         private void Notify_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NotificationWindow notificationWindow = new NotificationWindow()
-            {
-                Owner = this
-            };
-            notificationWindow.ShowDialog();
+            new NotificationWindow().ShowDialog(this);
         }
 
         private void Constants_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ConstantsWindow constantsWindow = new ConstantsWindow()
-            {
-                Owner = this
-            };
-            constantsWindow.ShowDialog();
-            Update();
+            new ConstantsWindow().ShowDialog(this);
+            UpdateDealers();
+            Dealers.SelectItem();
         }
 
         private void Update_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Update();
+            UpdateDealers();
+            Dealers.SelectItem();
         }
     }
 }
