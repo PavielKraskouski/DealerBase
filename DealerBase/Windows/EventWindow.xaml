@@ -9,7 +9,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource Accept}" CanExecute="Accept_CanExecute" Executed="Accept_Executed"/>
     </Window.CommandBindings>
-    <Border Margin="10" Background="#404040" BorderBrush="#000000" BorderThickness="1">
+    <Border Margin="10" Width="292" Background="#404040" BorderBrush="#000000" BorderThickness="1">
         <StackPanel Margin="10">
             <TextBlock Text="Дата:"/>
             <DatePicker x:Name="Date" Margin="0,5,0,0"/>
@@ -23,8 +23,8 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Accept" Width="130" Height="40" Content="OK" IsDefault="True" Command="{StaticResource Accept}"/>
-                <Button Grid.Column="2" Width="130" Height="40" Content="Отмена" Click="Cancel_Click"/>
+                <Button x:Name="Accept" Height="40" Content="OK" IsDefault="True" Command="{StaticResource Accept}"/>
+                <Button Grid.Column="2" Height="40" Content="Отмена" Click="Cancel_Click"/>
             </Grid>
         </StackPanel>
     </Border>

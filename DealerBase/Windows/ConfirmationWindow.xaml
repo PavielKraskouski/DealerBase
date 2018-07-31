@@ -19,8 +19,8 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Width="130" Height="40" Content="Да" IsDefault="True" Click="Yes_Click"/>
-                <Button Grid.Column="2" Width="130" Height="40" Content="Нет" Click="No_Click"/>
+                <Button Height="40" Content="Да" IsDefault="True" Click="Yes_Click"/>
+                <Button Grid.Column="2" Height="40" Content="Нет" Click="No_Click"/>
             </Grid>
         </StackPanel>
     </Border>
