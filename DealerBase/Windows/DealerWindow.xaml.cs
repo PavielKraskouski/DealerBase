@@ -214,7 +214,7 @@ namespace DealerBase.Windows
 
         private void Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _Name.Text != string.Empty && !(Dealer.Name.ToUpper() != _Name.Text.ToUpper() && Dealer.Exists(_Name.Text));
+            e.CanExecute = _Name.Text != string.Empty && !Dealer.Exists(_Name.Text, Dealer.Id);
         }
 
         private void Save_Executed(object sender, ExecutedRoutedEventArgs e)

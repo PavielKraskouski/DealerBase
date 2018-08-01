@@ -11,10 +11,11 @@ namespace DealerBase.Windows
     {
         public string Value { get; private set; }
 
-        public ConstantWindow(string value = null)
+        public ConstantWindow(string value = null, long valueId = 0)
         {
             InitializeComponent();
             Value = value;
+            Tag = valueId;
             this.FixLayout();
         }
 
@@ -45,13 +46,13 @@ namespace DealerBase.Windows
                 switch ((Owner as ConstantsWindow).Constant.SelectedIndex)
                 {
                     case 0:
-                        e.CanExecute = !(Value.ToUpper() != TextBox.Text.ToUpper() && BusinessEntity.Exists(TextBox.Text));
+                        e.CanExecute = !BusinessEntity.Exists(TextBox.Text, (long)Tag);
                         break;
                     case 1:
-                        e.CanExecute = !(Value.ToUpper() != TextBox.Text.ToUpper() && Activity.Exists(TextBox.Text));
+                        e.CanExecute = !Activity.Exists(TextBox.Text, (long)Tag);
                         break;
                     case 2:
-                        e.CanExecute = !(Value.ToUpper() != TextBox.Text.ToUpper() && ActivityDirection.Exists(TextBox.Text));
+                        e.CanExecute = !ActivityDirection.Exists(TextBox.Text, (long)Tag);
                         break;
                 }
             }

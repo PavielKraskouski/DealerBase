@@ -116,12 +116,12 @@ namespace DealerBase.Windows
         {
             if (ValueExists())
             {
-                ConstantWindow constantWindow = new ConstantWindow((Values.SelectedItem as TextBlock).Text);
+                long selectedValueId = (long)(Values.SelectedItem as TextBlock).Tag;
+                ConstantWindow constantWindow = new ConstantWindow((Values.SelectedItem as TextBlock).Text, selectedValueId);
                 if ((bool)constantWindow.ShowDialog(this))
                 {
                     if (ValueExists())
                     {
-                        long selectedValueId = (long)(Values.SelectedItem as TextBlock).Tag;
                         switch (Constant.SelectedIndex)
                         {
                             case 0:

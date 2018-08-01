@@ -23,9 +23,9 @@ namespace DealerBase.Entities
             return DBAccess.ExecuteScalar<long>("SELECT COUNT(*) FROM BusinessEntity WHERE Id = @param1", id) != 0;
         }
 
-        public static bool Exists(string name)
+        public static bool Exists(string name, long id)
         {
-            return DBAccess.ExecuteScalar<long>("SELECT COUNT(*) FROM BusinessEntity WHERE UPPER(Name) = @param1", name.ToUpper()) != 0;
+            return DBAccess.ExecuteScalar<long>("SELECT COUNT(*) FROM BusinessEntity WHERE UPPER(Name) = @param1 AND Id != @param2", name.ToUpper(), id) != 0;
         }
 
         public static long Count()
