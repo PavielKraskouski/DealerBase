@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DealerBase.Windows;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -64,7 +65,10 @@ namespace DealerBase
         public static bool? ShowDialog(this Window window, Window owner)
         {
             window.Owner = owner;
-            return window.ShowDialog();
+            MainWindow.ActiveWindow = window;
+            bool? dialogResult = window.ShowDialog();
+            MainWindow.ActiveWindow = MainWindow.Instance;
+            return dialogResult;
         }
 
         public static void FixLayout(this Window window)

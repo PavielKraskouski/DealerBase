@@ -156,7 +156,7 @@ namespace DealerBase.Windows
 
         private void Delete_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Values.SelectedItem != null && !DealerExists();
+            e.CanExecute = Values.SelectedItem != null && !ErrorWindow.CriticalError && !DealerExists();
         }
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)

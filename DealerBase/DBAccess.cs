@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DealerBase.Windows;
+using System;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
@@ -75,17 +76,33 @@ namespace DealerBase
 
         private static void Execute(Action<SQLiteCommand> action, string commandText, params object[] parameters)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
-            using (SQLiteCommand command = new SQLiteCommand(commandText, connection))
-            using (SQLiteCommand pragmaCommand = new SQLiteCommand("PRAGMA foreign_keys = 1", connection))
+            if (File.Exists(DBPath))
             {
-                connection.Open();
-                pragmaCommand.ExecuteNonQuery();
-                for (int i = 0; i < parameters.Length; i++)
+                try
                 {
-                    command.Parameters.Add(new SQLiteParameter(String.Format("@param{0}", i + 1), parameters[i]));
+                    using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
+                    using (SQLiteCommand command = new SQLiteCommand(commandText, connection))
+                    using (SQLiteCommand pragmaCommand = new SQLiteCommand("PRAGMA foreign_keys = 1", connection))
+                    {
+                        connection.Open();
+                        pragmaCommand.ExecuteNonQuery();
+                        for (int i = 0; i < parameters.Length; i++)
+                        {
+                            command.Parameters.Add(new SQLiteParameter(String.Format("@param{0}", i + 1), parameters[i]));
+                        }
+                        action(command);
+                    }
                 }
-                action(command);
+                catch (SQLiteException)
+                {
+                    new ErrorWindow(7).ShowDialog(MainWindow.ActiveWindow);
+                    Environment.Exit(7);
+                }
+            }
+            else
+            {
+                new ErrorWindow(7).ShowDialog(MainWindow.ActiveWindow);
+                Environment.Exit(7);
             }
         }
 

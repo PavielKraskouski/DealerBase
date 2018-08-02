@@ -15,6 +15,7 @@ namespace DealerBase.Windows
     public partial class MainWindow : Window
     {
         public static MainWindow Instance { get; private set; }
+        public static Window ActiveWindow { get; set; }
 
         public void UpdateDealers()
         {
@@ -55,6 +56,7 @@ namespace DealerBase.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Instance = this;
+            ActiveWindow = this;
             UpdateDealers();
             Dealers.SelectItem();
         }
@@ -76,7 +78,7 @@ namespace DealerBase.Windows
 
         private void Add_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = BusinessEntity.Count() != 0 && Entities.Activity.Count() != 0 && Entities.ActivityDirection.Count() != 0;
+            e.CanExecute = !ErrorWindow.CriticalError && BusinessEntity.Count() != 0 && Entities.Activity.Count() != 0 && Entities.ActivityDirection.Count() != 0;
         }
 
         private void Add_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -188,7 +190,7 @@ namespace DealerBase.Windows
 
         private void Emails_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = IsLoaded && Email.Count(new Filter(false)) != 0;
+            e.CanExecute = IsLoaded && !ErrorWindow.CriticalError && Email.Count(new Filter(false)) != 0;
         }
 
         private void Emails_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -214,7 +216,7 @@ namespace DealerBase.Windows
 
         private void Print_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = IsLoaded && Dealer.Count(new Filter(false)) != 0;
+            e.CanExecute = IsLoaded && !ErrorWindow.CriticalError && Dealer.Count(new Filter(false)) != 0;
         }
 
         private void Print_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -224,7 +226,7 @@ namespace DealerBase.Windows
 
         private void Notify_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Event.Count(DateTime.Now) != 0;
+            e.CanExecute = !ErrorWindow.CriticalError && Event.Count(DateTime.Now) != 0;
         }
 
         private void Notify_Executed(object sender, ExecutedRoutedEventArgs e)

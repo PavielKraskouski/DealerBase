@@ -4,7 +4,7 @@
         xmlns:cc="clr-namespace:DealerBase.CustomControls"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         WindowState="Maximized" Width="1024" Height="600" MinWidth="1024" MinHeight="600" Title="DealerBase"
-        Style="{StaticResource WindowStyle}" Loaded="Window_Loaded" Closed="Window_Closed">
+        Style="{StaticResource WindowStyle}" ShowInTaskbar="True" Loaded="Window_Loaded" Closed="Window_Closed">
     <Window.Resources>
         <RoutedUICommand x:Key="Add"/>
         <RoutedUICommand x:Key="Edit"/>

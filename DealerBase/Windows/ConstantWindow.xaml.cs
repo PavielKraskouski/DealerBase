@@ -46,13 +46,13 @@ namespace DealerBase.Windows
                 switch ((Owner as ConstantsWindow).Constant.SelectedIndex)
                 {
                     case 0:
-                        e.CanExecute = !BusinessEntity.Exists(TextBox.Text, (long)Tag);
+                        e.CanExecute = !ErrorWindow.CriticalError && !BusinessEntity.Exists(TextBox.Text, (long)Tag);
                         break;
                     case 1:
-                        e.CanExecute = !Activity.Exists(TextBox.Text, (long)Tag);
+                        e.CanExecute = !ErrorWindow.CriticalError && !Activity.Exists(TextBox.Text, (long)Tag);
                         break;
                     case 2:
-                        e.CanExecute = !ActivityDirection.Exists(TextBox.Text, (long)Tag);
+                        e.CanExecute = !ErrorWindow.CriticalError && !ActivityDirection.Exists(TextBox.Text, (long)Tag);
                         break;
                 }
             }

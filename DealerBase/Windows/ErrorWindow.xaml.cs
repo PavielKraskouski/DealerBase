@@ -20,10 +20,13 @@ namespace DealerBase.Windows
             "Ошибка доступа к базе данных.\nРабота программы будет прекращена."
         };
 
+        public static bool CriticalError { get; private set; }
+
         public ErrorWindow(byte errorCode)
         {
             InitializeComponent();
             MessageText.Text = ErrorMessages[errorCode];
+            CriticalError = errorCode == 7;
             SystemSounds.Hand.Play();
             this.FixLayout();
         }
