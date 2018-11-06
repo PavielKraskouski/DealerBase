@@ -69,7 +69,7 @@ namespace DealerBase.Entities
         public TextBlock ToTextBlock()
         {
             TextBlock textBlock = new TextBlock() { Tag = Id };
-            textBlock.Inlines.Add(new Run(String.Format("{0} {1} {2}", Surname, Name, Patronymic).Trim())
+            textBlock.Inlines.Add(new Run($"{Surname} {Name} {Patronymic}".Trim())
             {
                 FontSize = 20,
                 FontWeight = FontWeights.Bold

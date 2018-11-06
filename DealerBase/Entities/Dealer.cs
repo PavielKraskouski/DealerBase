@@ -49,7 +49,7 @@ namespace DealerBase.Entities
 
         public static EnumerableRowCollection<DataRow> Select(Filter filter)
         {
-            return DBAccess.ExecuteReader(String.Format("SELECT * FROM Dealer {0}", filter.Query), filter.Parameters);
+            return DBAccess.ExecuteReader($"SELECT * FROM Dealer {filter.Query}", filter.Parameters);
         }
 
         public static DataRow Select(long id)
@@ -69,12 +69,12 @@ namespace DealerBase.Entities
 
         public static long Count(Filter filter)
         {
-            return DBAccess.ExecuteScalar<long>(String.Format("SELECT COUNT(*) FROM Dealer {0}", filter.Query), filter.Parameters);
+            return DBAccess.ExecuteScalar<long>($"SELECT COUNT(*) FROM Dealer {filter.Query}", filter.Parameters);
         }
 
         public static long Count(string constantName, long constantId)
         {
-            return DBAccess.ExecuteScalar<long>(String.Format("SELECT COUNT(*) FROM Dealer WHERE {0}Id = @param1", constantName), constantId);
+            return DBAccess.ExecuteScalar<long>($"SELECT COUNT(*) FROM Dealer WHERE {constantName}Id = @param1", constantId);
         }
 
         public long Insert()
@@ -129,7 +129,7 @@ namespace DealerBase.Entities
         public static TextBlock ToTextBlock(DataRow dataRow)
         {
             TextBlock textBlock = new TextBlock() { Tag = dataRow.Field<long>("Id") };
-            textBlock.Inlines.Add(new Run(String.Format("{0} \"{1}\"", BusinessEntity.Select(dataRow.Field<long>("BusinessEntityId")).Field<string>("Name"), dataRow.Field<string>("Name")))
+            textBlock.Inlines.Add(new Run($"{BusinessEntity.Select(dataRow.Field<long>("BusinessEntityId")).Field<string>("Name")} \"{dataRow.Field<string>("Name")}\"")
             {
                 FontSize = 20,
                 FontWeight = FontWeights.Bold

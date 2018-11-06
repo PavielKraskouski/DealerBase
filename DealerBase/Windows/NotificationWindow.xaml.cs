@@ -26,7 +26,7 @@ namespace DealerBase.Windows
                     FontWeight = FontWeights.Bold
                 });
                 textBlock.Inlines.Add(new Run("\nДилер: ") { Foreground = Brushes.Silver });
-                textBlock.Inlines.Add(new Run(String.Format("{0} \"{1}\"", x.Field<string>("Name"), x.Field<string>("Name1"))));
+                textBlock.Inlines.Add(new Run($"{x.Field<string>("Name")} \"{x.Field<string>("Name1")}\""));
                 Events.Items.Add(textBlock);
             });
         }

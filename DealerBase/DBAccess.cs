@@ -29,8 +29,8 @@ namespace DealerBase
         private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string DBPath = Path.Combine(BaseDirectory, "DealerBase.db");
         private static readonly string DBBackupPath = Path.Combine(BaseDirectory, "DealerBase_Backup.db");
-        private static readonly string DBConnectionString = String.Format("Data Source = {0}", DBPath);
-        private static readonly string DBBackupConnectionString = String.Format("Data Source = {0}", DBBackupPath);
+        private static readonly string DBConnectionString = $"Data Source = {DBPath}";
+        private static readonly string DBBackupConnectionString = $"Data Source = {DBBackupPath}";
 
         public static void CreateDatabase()
         {
@@ -66,7 +66,7 @@ namespace DealerBase
 
         public static void BackupDatabase(string fileName)
         {
-            CloneDatabase(DBConnectionString, String.Format("Data Source = {0}", fileName));
+            CloneDatabase(DBConnectionString, $"Data Source = {fileName}");
         }
 
         private static void RestoreDatabase()
@@ -88,7 +88,7 @@ namespace DealerBase
                         pragmaCommand.ExecuteNonQuery();
                         for (int i = 0; i < parameters.Length; i++)
                         {
-                            command.Parameters.Add(new SQLiteParameter(String.Format("@param{0}", i + 1), parameters[i]));
+                            command.Parameters.Add(new SQLiteParameter($"@param{i + 1}", parameters[i]));
                         }
                         action(command);
                     }
@@ -108,9 +108,17 @@ namespace DealerBase
 
         public static EnumerableRowCollection<DataRow> ExecuteReader(string commandText, params object[] parameters)
         {
-            DataTable dataTable = new DataTable();
-            Execute(x => dataTable.Load(x.ExecuteReader()), commandText, parameters);
-            return dataTable.AsEnumerable();
+            using (DataTable dataTable = new DataTable())
+            {
+                Execute(x =>
+                {
+                    using (SQLiteDataReader reader = x.ExecuteReader())
+                    {
+                        dataTable.Load(reader);
+                    }
+                }, commandText, parameters);
+                return dataTable.AsEnumerable();
+            }
         }
 
         public static void ExecuteNonQuery(string commandText, params object[] parameters)

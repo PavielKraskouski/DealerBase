@@ -17,7 +17,7 @@ namespace DealerBase.Entities
 
         public static EnumerableRowCollection<DataRow> Select(Filter filter)
         {
-            return DBAccess.ExecuteReader(String.Format("SELECT DISTINCT Value FROM Email JOIN Contact ON Contact.Id = Email.ContactId JOIN Dealer ON Dealer.Id = Contact.DealerId {0} ORDER BY UPPER(Value) ASC", filter.Query), filter.Parameters);
+            return DBAccess.ExecuteReader($"SELECT DISTINCT Value FROM Email JOIN Contact ON Contact.Id = Email.ContactId JOIN Dealer ON Dealer.Id = Contact.DealerId {filter.Query} ORDER BY UPPER(Value) ASC", filter.Parameters);
         }
 
         public static EnumerableRowCollection<DataRow> Select(long contactId)
@@ -27,7 +27,7 @@ namespace DealerBase.Entities
 
         public static long Count(Filter filter)
         {
-            return DBAccess.ExecuteScalar<long>(String.Format("SELECT COUNT(DISTINCT Value) FROM Email JOIN Contact ON Contact.Id = Email.ContactId JOIN Dealer ON Dealer.Id = Contact.DealerId {0}", filter.Query), filter.Parameters);
+            return DBAccess.ExecuteScalar<long>($"SELECT COUNT(DISTINCT Value) FROM Email JOIN Contact ON Contact.Id = Email.ContactId JOIN Dealer ON Dealer.Id = Contact.DealerId {filter.Query}", filter.Parameters);
         }
 
         public void Insert(long contactId)

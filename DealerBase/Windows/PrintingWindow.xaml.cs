@@ -33,12 +33,12 @@ namespace DealerBase.Windows
                 Dealer dealer = Dealer.FromDataRow(x);
                 Contact contact = dealer.Contacts.FirstOrDefault();
                 Phone phone = contact?.Phones.FirstOrDefault();
-                TableCell nameCell = new TableCell(new Paragraph(new Run(String.Format("{0} \"{1}\"", BusinessEntity.Select(dealer.BusinessEntityId).Field<string>("Name"), dealer.Name)))) { Style = tableCellStyle };
+                TableCell nameCell = new TableCell(new Paragraph(new Run($"{BusinessEntity.Select(dealer.BusinessEntityId).Field<string>("Name")} \"{dealer.Name}\""))) { Style = tableCellStyle };
                 TableCell regionCell = new TableCell(new Paragraph(new Run(Region.Select(dealer.RegionId).Field<string>("Name")))) { Style = tableCellStyle };
                 TableCell activityCell = new TableCell(new Paragraph(new Run(Activity.Select(dealer.ActivityId).Field<string>("Name")))) { Style = tableCellStyle };
                 TableCell activityDirectionCell = new TableCell(new Paragraph(new Run(ActivityDirection.Select(dealer.ActivityDirectionId).Field<string>("Name")))) { Style = tableCellStyle };
                 TableCell ratingCell = new TableCell(new Paragraph(new Run(new string('★', (int)dealer.Rating)))) { Style = tableCellStyle };
-                TableCell contactCell = new TableCell(new Paragraph(new Run(contact == null ? "–" : String.Format("{0} {1} {2}", contact.Surname, contact.Name, contact.Patronymic).Trim()))) { Style = tableCellStyle };
+                TableCell contactCell = new TableCell(new Paragraph(new Run(contact == null ? "–" : $"{contact.Surname} {contact.Name} {contact.Patronymic}".Trim()))) { Style = tableCellStyle };
                 TableCell positionCell = new TableCell(new Paragraph(new Run(contact == null || contact.Position == string.Empty ? "–" : contact.Position))) { Style = tableCellStyle };
                 TableCell phoneCell = new TableCell(new Paragraph(new Run(phone == null ? "–" : phone.Value))) { Style = tableCellStyle };
                 TableRow tableRow = new TableRow();
